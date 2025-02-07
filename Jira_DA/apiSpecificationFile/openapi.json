@@ -1,0 +1,416 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Jira Cloud Type B",
+    "version": "1.0.0",
+    "description": "Jira API methods to search, create, and comment on issues."
+  },
+  "servers": [
+    {
+      "url": "https://api.atlassian.com/ex/jira/542cdff8-7a1f-4128-ba16-30ce1bf1a71c"
+    }
+  ],
+  "security": [
+    {
+      "OAuth2": []
+    }
+  ],
+  "paths": {
+    "/rest/api/2/issue/{issueIdOrKey}/comment": {
+      "get": {
+        "deprecated": false,
+        "description": "Returns all comments for an issue.",
+        "operationId": "getComments",
+        "parameters": [
+          {
+            "description": "The ID or key of the issue.",
+            "in": "path",
+            "name": "issueIdOrKey",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "startAt": {
+                      "type": "integer"
+                    },
+                    "maxResults": {
+                      "type": "integer"
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "comments": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "author": {
+                            "type": "object",
+                            "properties": {
+                              "accountId": {
+                                "type": "string"
+                              },
+                              "displayName": {
+                                "type": "string"
+                              },
+                              "emailAddress": {
+                                "type": "string"
+                              },
+                              "active": {
+                                "type": "boolean"
+                              },
+                              "timeZone": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "body": {
+                            "type": "string"
+                          },
+                          "created": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updated": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "visibility": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "deprecated": false,
+        "summary": "Adds a comment to an issue",
+        "description": "Adds a comment to an issue.",
+        "operationId": "addComment",
+        "parameters": [
+          {
+            "description": "The ID or key of the issue.",
+            "in": "path",
+            "name": "issueIdOrKey",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The comment to add.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "body": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "body": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rest/api/3/project": {
+      "get": {
+        "summary": "Retrieve all projects",
+        "description": "Fetches all projects visible to the user",
+        "operationId": "getProjects",
+        "responses": {
+          "200": {
+            "description": "Successful response with a list of projects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "key": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "self": {
+                        "type": "string",
+                        "format": "uri"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/rest/api/3/user/search": {
+      "get": {
+        "operationId": "searchUsers",
+        "summary": "Search for users",
+        "description": "Searches for users based on email address or user name.",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "description": "user email address or user name. For self, use currentUser().",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with a list of users.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "self": {
+                        "type": "string"
+                      },
+                      "accountId": {
+                        "type": "string"
+                      },
+                      "accountType": {
+                        "type": "string"
+                      },
+                      "emailAddress": {
+                        "type": "string"
+                      },
+                      "displayName": {
+                        "type": "string"
+                      },
+                      "active": {
+                        "type": "boolean"
+                      },
+                      "timeZone": {
+                        "type": "string"
+                      },
+                      "locale": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rest/api/3/search": {
+      "post": {
+        "deprecated": false,
+        "description": "Searches for issues, bugs, projects, tasks, features using a POST request",
+        "operationId": "searchForIssuesUsingJql",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "jql": {
+                    "description": "A precise JQL query generated from the utterance. Use JQL instructions for generation. JQL Instructions: Type can be one these: 'Bug','Task','Epic', 'Story'. StatusCategory must be one or more of these: 'To Do','In Progress','Done'. When a user asks for pending issues use statusCategory != Done. Priority must be one or more of these: 'Highest', 'High', 'Medium', 'Low'. When a user asks for high priority show tickets with both High and Highest. Eg. Priority in (High, Highest). Assignee value must be in single quotes. Eg.Assignee='john@xyz.com'. If self assigned, always use Assignee=currentUser(). Project,Summary,Text must be in quotes. Eg. Text~'abc' AND Project='xyz'. For linked items use:issue in linkedIssues()",
+                    "type": "string",
+                    "example": "project = HSP"
+                  },
+                  "startAt": {
+                    "description": "The index of the first item to return in a page of results (page offset).",
+                    "type": "integer",
+                    "format": "int32",
+                    "default": 0
+                  },
+                  "maxResults": {
+                    "description": "The maximum number of items to return per page.",
+                    "type": "integer",
+                    "format": "int32",
+                    "default": 10
+                  }
+                },
+                "required": [
+                  "jql",
+                  "startAt",
+                  "maxResults"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "startAt": {
+                      "type": "integer"
+                    },
+                    "maxResults": {
+                      "type": "integer"
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "issues": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "key": {
+                            "type": "string"
+                          },
+                          "self": {
+                            "type": "string"
+                          },
+                          "fields": {
+                            "type": "object",
+                            "properties": {
+                              "summary": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "assignee": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "reporter": {
+                                "type": "object",
+                                "properties": {
+                                  "displayName": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "priority": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "labels": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "created": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "updated": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://auth.atlassian.com/authorize?audience=api.atlassian.com",
+            "tokenUrl": "https://auth.atlassian.com/oauth/token",
+            "scopes": {
+              "read:jira-work": "View Jira issue data",
+              "write:jira-work": "Create and manage issues",
+              "read:jira-user": "View user profile"
+            }
+          }
+        }
+      }
+    }
+  }
+}

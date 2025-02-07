@@ -1,0 +1,270 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/copilot/plugin/v2.2/schema.json",
+    "schema_version": "v2.2",
+    "name_for_human": "JiraSampleFeb6_2",
+    "description_for_human": "Jira API methods to search, create, and comment on issues.",
+    "namespace": "jirasample",
+    "functions": [
+        {
+            "name": "getComments",
+            "description": "Returns all comments for an issue.",
+            "capabilities": {
+                "response_semantics": {
+                    "data_path": "$",
+                    "properties": {
+                        "title": "$.startAt",
+                        "subtitle": "$.maxResults"
+                    },
+                    "static_template": {
+                        "type": "AdaptiveCard",
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.5",
+                        "body": [
+                            {
+                                "type": "TextBlock",
+                                "text": "startAt: ${if(startAt, startAt, 'N/A')}",
+                                "wrap": true
+                            },
+                            {
+                                "type": "TextBlock",
+                                "text": "maxResults: ${if(maxResults, maxResults, 'N/A')}",
+                                "wrap": true
+                            },
+                            {
+                                "type": "TextBlock",
+                                "text": "total: ${if(total, total, 'N/A')}",
+                                "wrap": true
+                            },
+                            {
+                                "type": "Container",
+                                "$data": "${comments}",
+                                "items": [
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "comments.id: ${if(id, id, 'N/A')}",
+                                        "wrap": true
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "comments.author.accountId: ${if(author.accountId, author.accountId, 'N/A')}",
+                                        "wrap": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "addComment",
+            "description": "Adds a comment to an issue.",
+            "capabilities": {
+                "response_semantics": {
+                    "data_path": "$",
+                    "properties": {
+                        "title": "$.body"
+                    },
+                    "static_template": {
+                        "type": "AdaptiveCard",
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.5",
+                        "body": [
+                            {
+                                "type": "TextBlock",
+                                "text": "body: ${if(body, body, 'N/A')}",
+                                "wrap": true
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "getProjects",
+            "description": "Fetches all projects visible to the user",
+            "capabilities": {
+                "response_semantics": {
+                    "data_path": "$",
+                    "properties": {
+                        "title": "$.name",
+                        "subtitle": "$.id"
+                    },
+                    "static_template": {
+                        "type": "AdaptiveCard",
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.5",
+                        "body": [
+                            {
+                                "type": "Container",
+                                "$data": "${$root}",
+                                "items": [
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "id: ${if(id, id, 'N/A')}",
+                                        "wrap": true
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "key: ${if(key, key, 'N/A')}",
+                                        "wrap": true
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "name: ${if(name, name, 'N/A')}",
+                                        "wrap": true
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "self: ${if(self, self, 'N/A')}",
+                                        "wrap": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "searchUsers",
+            "description": "Searches for users based on email address or user name.",
+            "capabilities": {
+                "response_semantics": {
+                    "data_path": "$",
+                    "properties": {
+                        "title": "$.displayName",
+                        "subtitle": "$.accountId"
+                    },
+                    "static_template": {
+                        "type": "AdaptiveCard",
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.5",
+                        "body": [
+                            {
+                                "type": "Container",
+                                "$data": "${$root}",
+                                "items": [
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "self: ${if(self, self, 'N/A')}",
+                                        "wrap": true
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "accountId: ${if(accountId, accountId, 'N/A')}",
+                                        "wrap": true
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "accountType: ${if(accountType, accountType, 'N/A')}",
+                                        "wrap": true
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "emailAddress: ${if(emailAddress, emailAddress, 'N/A')}",
+                                        "wrap": true
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "displayName: ${if(displayName, displayName, 'N/A')}",
+                                        "wrap": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "name": "searchForIssuesUsingJql",
+            "description": "Searches for issues, bugs, projects, tasks, features using a POST request",
+            "capabilities": {
+                "response_semantics": {
+                    "data_path": "$",
+                    "properties": {
+                        "title": "$.startAt",
+                        "subtitle": "$.maxResults"
+                    },
+                    "static_template": {
+                        "type": "AdaptiveCard",
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.5",
+                        "body": [
+                            {
+                                "type": "TextBlock",
+                                "text": "startAt: ${if(startAt, startAt, 'N/A')}",
+                                "wrap": true
+                            },
+                            {
+                                "type": "TextBlock",
+                                "text": "maxResults: ${if(maxResults, maxResults, 'N/A')}",
+                                "wrap": true
+                            },
+                            {
+                                "type": "TextBlock",
+                                "text": "total: ${if(total, total, 'N/A')}",
+                                "wrap": true
+                            },
+                            {
+                                "type": "Container",
+                                "$data": "${issues}",
+                                "items": [
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "issues.id: ${if(id, id, 'N/A')}",
+                                        "wrap": true
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "issues.key: ${if(key, key, 'N/A')}",
+                                        "wrap": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ],
+    "runtimes": [
+        {
+            "type": "OpenApi",
+            "auth": {
+                "type": "OAuthPluginVault",
+                "reference_id": "NzJmOTg4YmYtODZmMS00MWFmLTkxYWItMmQ3Y2QwMTFkYjQ3IyMzYjZjZjE1Mi1mOGNiLTQzNDQtYjYwYi05ZDdjMmFiZGJlYTQ="
+            },
+            "spec": {
+                "url": "apiSpecificationFile/openapi.json"
+            },
+            "run_for_functions": [
+                "getComments",
+                "addComment",
+                "getProjects",
+                "searchUsers",
+                "searchForIssuesUsingJql"
+            ]
+        }
+    ],
+    "capabilities": {
+        "conversation_starters": [
+            {
+                "text": "Returns all comments for an issue."
+            },
+            {
+                "text": "Adds a comment to an issue"
+            },
+            {
+                "text": "Retrieve all projects"
+            },
+            {
+                "text": "Search for users"
+            },
+            {
+                "text": "Searches for issues, bugs, projects, tasks, featur"
+            }
+        ]
+    }
+}
