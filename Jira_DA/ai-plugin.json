@@ -1,7 +1,7 @@
 {
     "$schema": "https://developer.microsoft.com/json-schemas/copilot/plugin/v2.2/schema.json",
     "schema_version": "v2.2",
-    "name_for_human": "JiraSampleFeb6_2",
+    "name_for_human": "Jira Sample",
     "description_for_human": "Jira API methods to search, create, and comment on issues.",
     "namespace": "jirasample",
     "functions": [
@@ -234,7 +234,7 @@
             "type": "OpenApi",
             "auth": {
                 "type": "OAuthPluginVault",
-                "reference_id": "NzJmOTg4YmYtODZmMS00MWFmLTkxYWItMmQ3Y2QwMTFkYjQ3IyMzYjZjZjE1Mi1mOGNiLTQzNDQtYjYwYi05ZDdjMmFiZGJlYTQ="
+                "reference_id": "<Add a reference id here>"
             },
             "spec": {
                 "url": "apiSpecificationFile/openapi.json"

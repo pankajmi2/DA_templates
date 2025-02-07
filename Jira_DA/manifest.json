@@ -2,7 +2,7 @@
     "$schema": "https://developer.microsoft.com/json-schemas/teams/v1.19/MicrosoftTeams.schema.json",
     "manifestVersion": "1.19",
     "version": "1.0.0",
-    "id": "6effc31b-30c1-312b-9c48-f602b97d6ecf",
+    "id": "<Add a GUID>",
     "developer": {
         "name": "Teams App, Inc.",
         "websiteUrl": "https://www.example.com",
@@ -14,12 +14,12 @@
         "outline": "outline.png"
     },
     "name": {
-        "short": "JiraSampleFeb6",
-        "full": "Full name for JiraSample"
+        "short": "Jira Sample",
+        "full": "Full name for Jira Sample"
     },
     "description": {
-        "short": "Short description for JiraSample",
-        "full": "Full description for JiraSample"
+        "short": "Short description for Jira Sample",
+        "full": "Full description for Jira Sample"
     },
     "accentColor": "#FFFFFF",
     "copilotAgents": {
