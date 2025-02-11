@@ -1,0 +1,161 @@
+{
+    "$schema": "https://aka.ms/json-schemas/teams/v1.19/MicrosoftTeams.schema.json",
+    "version": "1.1.0",
+    "manifestVersion": "1.19",
+    "id": "<Random GUID>",
+    "name": {
+        "short": "GitHub<placeholder suffix>",
+        "full": "GitHub<placeholder suffix>"
+    },
+    "developer": {
+        "name": "Microsoft Corporation",
+        "websiteUrl": "https://github.com",
+        "privacyUrl": "https://help.github.com/en/github/site-policy/github-privacy-statement",
+        "termsOfUseUrl": "https://github.com/integrations/microsoft-teams/blob/master/docs/terms-and-conditions.md"
+    },
+    "description": {
+        "short": "GitHub integration with Microsoft Teams",
+        "full": "GitHub is the leading software development platform. Microsoft Teams is one of the most popular communication platforms where modern development teams come together to build world-class products and services. With two of your most important workspaces connected, you'll stay updated on what's happening on GitHub without leaving Microsoft Teams. GitHub integration for Microsoft Teams gives you and your teams full visibility into your GitHub projects right in your Microsoft Teams channels, where you generate ideas, triage issues and collaborate with other teams to move projects forward. Github is designed to work with Microsoft 365 Copilot to search for issues and pull requests."
+    },
+    "icons": {
+        "outline": "outline.png",
+        "color": "color.png"
+    },
+    "accentColor": "#1B1F23",
+    "bots": [
+        {
+            "botId": "ca9e26b7-dce5-44a0-b2b7-a70a3d65ce25",
+            "scopes": [
+                "team",
+                "personal"
+            ],
+            "commandLists": [
+                {
+                    "commands": [
+                        {
+                            "title": "subscribe",
+                            "description": "Subscribe to notifications for a repository or an organization"
+                        },
+                        {
+                            "title": "unsubscribe",
+                            "description": "Unsubscribe from notifications for a repository or an organization"
+                        },
+                        {
+                            "title": "subscribe list",
+                            "description": "List all active subscriptions in this channel"
+                        },
+                        {
+                            "title": "subscribe list features",
+                            "description": "List all active subscriptions with subscribed features"
+                        },
+                        {
+                            "title": "help",
+                            "description": "To learn more about @github"
+                        },
+                        {
+                            "title": "signin",
+                            "description": "Connect your GitHub account"
+                        },
+                        {
+                            "title": "schedule",
+                            "description": "Configure reminder for pending pull request reviews for an organization"
+                        },
+                        {
+                            "title": "schedule list",
+                            "description": "List scheduled reminders on this channel"
+                        }
+                    ],
+                    "scopes": [
+                        "personal"
+                    ]
+                },
+                {
+                    "commands": [
+                        {
+                            "title": "subscribe",
+                            "description": "Subscribe to notifications for a repository or an organization"
+                        },
+                        {
+                            "title": "unsubscribe",
+                            "description": "Unsubscribe from notifications for a repository or an organization"
+                        },
+                        {
+                            "title": "subscribe list",
+                            "description": "List all active subscriptions in this channel"
+                        },
+                        {
+                            "title": "subscribe list features",
+                            "description": "List all active subscriptions with subscribed features"
+                        },
+                        {
+                            "title": "help",
+                            "description": "To learn more about @github"
+                        },
+                        {
+                            "title": "signin",
+                            "description": "Connect your GitHub account"
+                        },
+                        {
+                            "title": "schedule",
+                            "description": "Configure reminder for pending pull request reviews for a repository or an organization"
+                        },
+                        {
+                            "title": "schedule list",
+                            "description": "List scheduled reminders on this channel"
+                        }
+                    ],
+                    "scopes": [
+                        "team"
+                    ]
+                }
+            ],
+            "isNotificationOnly": false,
+            "supportsCalling": false,
+            "supportsVideo": false,
+            "supportsFiles": false
+        }
+    ],
+    "composeExtensions": [
+        {
+            "botId": "ca9e26b7-dce5-44a0-b2b7-a70a3d65ce25",
+            "commands": [
+                {
+                    "id": "create-issue",
+                    "type": "action",
+                    "title": "Create issue",
+                    "description": "Create an issue",
+                    "initialRun": false,
+                    "fetchTask": true,
+                    "context": [
+                        "commandBox",
+                        "message",
+                        "compose"
+                    ]
+                }
+            ],
+            "canUpdateConfiguration": false,
+            "messageHandlers": [
+                {
+                    "type": "link",
+                    "value": {
+                        "domains": [
+                            "github.com"
+                        ],
+                        "supportsAnonymizedPayloads": true
+                    }
+                }
+            ]
+        }
+    ],
+    "validDomains": [
+        "*.github.com"
+    ],
+	"copilotAgents": {
+        "declarativeAgents": [
+            {
+                "id": "declarativeCopilot",
+                "file": "declarativeCopilot.json"
+            }
+        ]
+    }
+}

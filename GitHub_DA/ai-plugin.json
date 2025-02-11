@@ -1,0 +1,499 @@
+{
+    "$schema": "https://aka.ms/json-schemas/copilot-extensions/v2.1/plugin.schema.json",
+    "schema_version": "v2.1",
+    "name_for_human": "GitHub Copilot Agent (DF)",
+    "description_for_human": "GitHub Plugin for managing GitHub operations to search for issues and pull requests from Github and perform operations like get or update.",
+    "description_for_model": "Help user by fetching list of issues, assign them to users or change their state. List pull requests.",
+    "namespace": "GitHubCopilotPlugin",
+    "functions": [
+        {
+            "name": "listIssues",
+            "description": "Using GitHub, List issues from all the visible repositories. List can be filtered based on sorts of issues like Assigned, Created, Subscribed by the user or issues mentioning the user. List can also be filtered based on the State or Label of the issue.",
+            "capabilities": {
+                "response_semantics": {
+                    "data_path": "$",
+                    "properties": {
+                        "title": "$.html_url",
+                        "subtitle": "$.id",
+                        "url": "$.html_url"
+                    },
+                    "static_template": {
+                        "type": "AdaptiveCard",
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.5",
+                        "body": [
+                            {
+                                "type": "Container",
+                                "$data": "${$root}",
+                                "items": [
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "Issue #${if(number, number, 'N/A')}",
+                                        "weight": "Bolder",
+                                        "size": "Medium"
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "${if(title, title, 'N/A')}",
+                                        "weight": "Bolder",
+                                        "size": "Large",
+                                        "wrap": true
+                                    },
+									{
+                                        "type": "TextBlock",
+                                        "text": "${if(body, body, 'N/A')}",
+                                        "weight": "lighter",
+                                        "size": "Small",
+										"spacing": "small",
+										"maxLines": "2",
+										"wrap": true
+                                    },
+                                    {
+                                        "type": "FactSet",
+                                        "facts": [
+											{
+												"title": "State",
+												"value": "${if(state, state, 'N/A')}"
+											},
+                                            {
+                                                "title": "Created Date",
+                                                "value": "{{DATE(${if(created_at, created_at, 'N/A')}, SHORT)}}"
+                                            },
+                                            {
+                                                "title": "Repository",
+                                                "value": "${if(repository && repository.html_url, repository.html_url, 'N/A')}"
+                                            },
+                                            {
+                                                "title": "Label",
+                                                "value": "${if(labels && count(labels) > 0, labels[0].name, 'None yet')}"
+                                            },
+                                            {
+                                                "title": "Assignee",
+                                                "value": "${if(assignee && assignee.login, assignee.login, 'No one')}"
+                                            }
+											
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "actions": [
+                            {
+                                "type": "Action.OpenUrl",
+                                "title": "Open",
+                                "url": "${if(html_url, html_url, 'N/A')}"
+                            }
+                        ]
+                    }
+                },
+            "confirmation": {
+                "type": "AdaptiveCard",
+                "title": "Lookup Github Issues",
+                "body": "Do you want to allow lookup for issues in Github?"
+            }
+            },
+            "states": {
+                "responding": {
+                    "description": "Response can contain pull request as well. It can be identified by the by the 'pull_request' key, skip them from response. Always include issue number and repository full name for every issue in the response",
+                    "instructions": "Response can contain pull request as well. It can be identified by the by the 'pull_request' key, skip them from response. Always include issue number and repository full name for every issue in the response. In case of empty response, ask user to check his access for the github or try using github application to check the data."
+                }
+            }
+        },
+		{
+            "name": "listRepoIssues",
+            "description": "Using GitHub, List issues from a repository. List can be filtered by Creator, State, Labels, and other criteria.",
+            "capabilities": {
+                "response_semantics": {
+                    "data_path": "$",
+                    "properties": {
+                        "title": "$.html_url",
+                        "subtitle": "$.id",
+                          "url": "$.html_url"
+                    },
+                    "static_template": {
+                        "type": "AdaptiveCard",
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.5",
+                        "body": [
+                            {
+                                "type": "Container",
+                                "$data": "${$root}",
+                                "items": [
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "Issue #${if(number, number, 'N/A')}",
+                                        "weight": "Bolder",
+                                        "size": "Medium"
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "${if(title, title, 'N/A')}",
+                                        "weight": "Bolder",
+                                        "size": "Large",
+                                        "wrap": true
+                                    },
+									{
+                                        "type": "TextBlock",
+                                        "text": "${if(body, body, 'N/A')}",
+                                        "weight": "lighter",
+                                        "size": "Small",
+										"spacing": "small",
+										"maxLines": "2",
+										"wrap": true
+                                    },
+                                    {
+                                        "type": "FactSet",
+                                        "facts": [
+											{
+												"title": "State",
+												"value": "${if(state, state, 'N/A')}"
+											},
+                                            {
+                                                "title": "Created Date",
+                                                "value": "{{DATE(${if(created_at, created_at, 'N/A')}, SHORT)}}"
+                                            },
+                                            {
+                                                "title": "Label",
+                                                "value": "${if(labels && count(labels) > 0, labels[0].name, 'None yet')}"
+                                            },
+                                            {
+                                                "title": "Assignee",
+                                                "value": "${if(assignee && assignee.login, assignee.login, 'No one')}"
+                                            }
+											
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "actions": [
+                            {
+                                "type": "Action.OpenUrl",
+                                "title": "Open",
+                                "url": "${if(html_url, html_url, 'N/A')}"
+                            }
+                        ]
+                    }
+                },
+                "confirmation": {
+                "type": "AdaptiveCard",
+                "title": "Lookup Github Issues",
+                "body": "Do you want to allow lookup for issues in your Github repository?"
+            }
+            },
+			"states": {
+                "reasoning": {
+                    "instructions": [
+                        "Invoke `listRepoIssues` to fetch issues from a repository. User login name in Github must be provided to fetch issues for any user.For example, ask user provide his login name in Github if he wants to fetch issues created by him."
+                    ]
+                },
+                "responding": {
+                    "description": "Response can contain pull request as well. It can be identified by the by the 'pull_request' key, skip them from response. Always include issue number and repository full name for every issue in the response.",
+                    "instructions": "Response can contain pull request as well. It can be identified by the by the 'pull_request' key, skip them from response. Always include issue number and repository full name for every issue in the response. These details should be used to fetch more details about the issue or update the issue./n/n In case of empty response, ask user to check his access for the github repository or try using github application to check the data."
+                }
+            }
+        },
+        {
+            "name": "getIssue",
+            "description": "Using GitHub, Fetch details of an issue from a repository.",
+            "capabilities": {
+                "response_semantics": {
+                    "data_path": "$",
+					"properties": {
+                        "title": "$.html_url",
+                        "subtitle": "$.id",
+                        "url": "$.html_url"
+                    },
+                    "static_template": {
+                        "type": "AdaptiveCard",
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.5",
+                        "body": [
+                            {
+                                "type": "Container",
+                                "$data": "${$root}",
+                                "items": [
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "Issue #${if(number, number, 'N/A')}",
+                                        "weight": "Bolder",
+                                        "size": "Medium"
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "${if(title, title, 'N/A')}",
+                                        "weight": "Bolder",
+                                        "size": "Large",
+                                        "wrap": true
+                                    },
+									{
+                                        "type": "TextBlock",
+                                        "text": "${if(body, body, 'N/A')}",
+                                        "weight": "lighter",
+                                        "size": "Small",
+										"spacing": "small",
+										"maxLines": "4",
+										"wrap": true
+                                    },
+                                    {
+                                        "type": "FactSet",
+                                        "facts": [
+											{
+												"title": "State",
+												"value": "${if(state, state, 'N/A')}"
+											},
+                                            {
+                                                "title": "Created Date",
+                                                "value": "{{DATE(${if(created_at, created_at, 'N/A')}, SHORT)}}"
+                                            },
+                                            {
+                                                "title": "Label",
+                                                "value": "${if(labels && count(labels) > 0, labels[0].name, 'None yet')}"
+                                            },
+                                            {
+                                                "title": "Assignee",
+                                                "value": "${if(assignee && assignee.login, assignee.login, 'No one')}"
+                                            }
+											
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "actions": [
+                            {
+                                "type": "Action.OpenUrl",
+                                "title": "Open",
+                                "url": "${if(html_url, html_url, 'N/A')}"
+                            }
+                        ]
+                    }
+                },
+                "confirmation": {
+                "type": "AdaptiveCard",
+                "title": "Provide Details for Github Issue",
+                "body": "Do you want to allow lookup for issues in Github?"
+            }
+            },
+            "states": {
+                "responding": {
+                    "instructions": "Always include issue number and repository full name in the response. These details should be used to update the issue.In case of empty response or error, ask user to provide again the issue number and full repository name."
+                }
+            }
+        },
+		{
+            "name": "updateIssue",
+            "description": "Using GitHub, Update an issue in a repository. Issue can be updated by changing attributes like title, body, state, assignees, labels, milestone or state. Adding a comment to the issue is not supported in this version.",
+            "capabilities": {
+                "response_semantics": {
+                    "data_path": "$",
+                    "properties": {
+                        "title": "$.html_url",
+                        "subtitle": "$.id",
+                        "url": "$.html_url"
+                    },
+                    "static_template": {
+                        "type": "AdaptiveCard",
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.5",
+                        "body": [
+                            {
+                                "type": "Container",
+                                "$data": "${$root}",
+                                "items": [
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "Issue #${if(number, number, 'N/A')}",
+                                        "weight": "Bolder",
+                                        "size": "Medium"
+                                    },
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "${if(title, title, 'N/A')}",
+                                        "weight": "Bolder",
+                                        "size": "Large",
+                                        "wrap": true
+                                    },
+									{
+                                        "type": "TextBlock",
+                                        "text": "${if(body, body, 'N/A')}",
+                                        "weight": "lighter",
+                                        "size": "Small",
+										"spacing": "small",
+										"maxLines": "4",
+										"wrap": true
+                                    },
+                                    {
+                                        "type": "FactSet",
+                                        "facts": [
+											{
+												"title": "State",
+												"value": "${if(state, state, 'N/A')}"
+											},
+                                            {
+                                                "title": "Created Date",
+                                                "value": "{{DATE(${if(created_at, created_at, 'N/A')}, SHORT)}}"
+                                            },
+                                            {
+                                                "title": "Label",
+                                                "value": "${if(labels && count(labels) > 0, labels[0].name, 'None yet')}"
+                                            },
+                                            {
+                                                "title": "Assignee",
+                                                "value": "${if(assignee && assignee.login, assignee.login, 'No one')}"
+                                            }
+											
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "actions": [
+                            {
+                                "type": "Action.OpenUrl",
+                                "title": "Open",
+                                "url": "${if(html_url, html_url, 'N/A')}"
+                            }
+                        ]
+                    }
+                },
+                "confirmation": {
+                "type": "AdaptiveCard",
+                "title": "Update Github Issues",
+                "body": "Do you want to allow this update to the issue?"
+            }
+            },
+            "states": {
+                "reasoning": {
+                    "instructions": [
+                        "Invoke `updateIssue` if the user wants to update an issue. Update an issue by changing attributes like title, body, state, assignee, labels, milestone or state. Parameters for invoking `updateIssue`: 1. Owner (str, required): Indicates the prefix of the repository path, 2. Repository (str, required): Indicates the suffix of the repository path, 3. Issue_Number (int, required): Indicates the unique issue number in the repository, 4. Title (str, optional): The title of the issue, 5. Body (str, optional): The body content of the issue, 6. State (str, optional): State of the issue; either 'open' or 'closed', 7. Assignees (list, optional): Usernames to assign to the issue, 8. Labels (list, optional): Labels to associate with the issue, 9. Milestone (int, optional): The number of the milestone to associate this issue with.",
+                        "Adding comment to the issue is not supported in this version. Updating the repository, owner or the project of issue is not supported in this version."
+                    ]
+                }
+            }
+        },
+        {
+            "name": "listPullRequests",
+            "description": "Using GitHub, Lists pull requests in a specified repository. Other operations on pull request like merging, approving or commenting on it are not supported in this version.",
+            "capabilities": {
+                "response_semantics": {
+                    "data_path": "$",
+                    "properties": {
+                        "title": "$.title",
+                        "subtitle": "$.id",
+                        "url": "$.html_url"
+                    },
+                    "static_template": {
+                        "type": "AdaptiveCard",
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.5",
+                        "body": [
+                            {
+                                "type": "Container",
+                                "$data": "${$root}",
+                                "items": [
+                                    {
+                                        "type": "TextBlock",
+                                        "text": "Pull Request #${if(number, number, 'N/A')}",
+										"weight": "Bolder",
+                                        "size": "Medium"
+                                    },
+									{
+                                        "type": "TextBlock",
+                                        "text": "Title: ${if(title, title, 'N/A')}",
+										"weight": "Bolder",
+                                        "size": "Large",
+                                        "wrap": true
+                                    },
+									{
+                                        "type": "TextBlock",
+                                        "text": "Description: ${if(body, body, 'N/A')}",
+										"weight": "lighter",
+                                        "size": "Small",
+										"spacing": "small",
+										"maxLines": "4",
+                                        "wrap": true
+                                    },
+									{
+                                        "type": "FactSet",
+                                        "facts": [
+											{
+												"title": "State",
+												"value": "${if(state, state, 'N/A')}"
+											},
+                                            {
+                                                "title": "Created Date",
+                                                "value": "{{DATE(${if(created_at, created_at, 'N/A')}, SHORT)}}"
+                                            },
+                                            {
+                                                "title": "Assignee",
+                                                "value": "${if(assignees && count(assignees) > 0, assignees[0].login, 'None yet')}"
+                                            },
+                                            {
+                                                "title": "Label",
+                                                "value": "${if(labels && count(labels) > 0, labels[0].name, 'None yet')}"
+                                            },
+											{
+                                                "title": "Requested Reviewer",
+                                                "value": "${if(requested_reviewers && count(requested_reviewers) > 0, requested_reviewers[0].login, 'None yet')}"
+                                            }
+											
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+						"actions": [
+                            {
+                                "type": "Action.OpenUrl",
+                                "title": "Open",
+                                "url": "${if(html_url, html_url, 'N/A')}"
+                            }
+                        ]
+                    }
+                },
+                "confirmation": {
+                "type": "AdaptiveCard",
+                "title": "Lookup Github Pull Requests",
+                "body": "Do you want to allow lookup for pull requests in Github?"
+            }
+            }
+        }
+    ],
+    "runtimes": [
+        {
+            "type": "OpenApi",
+            "auth": {
+                "type": "OAuthPluginVault",
+                "reference_id": "<refid>"
+            },
+            "spec": {
+                "url": "apiSpecificationFile/openapi.yaml"
+            },
+            "run_for_functions": [
+                "listIssues",
+				"listRepoIssues",
+                "getIssue",
+				"updateIssue",
+				"listPullRequests"
+			]
+        }
+    ],
+    "capabilities": {
+        "localization": {},
+        "conversation_starters": [
+            {
+                "text": "Catch me up on the issues assigned to me."
+            },
+            {
+                "text": "Summarize all issues from a repository."
+            },
+            {
+				"text": "Provide details about issue number from a repository."
+			},
+			{
+                "text": "Close the issue number from a repository."
+            }
+        ]
+    }
+}
